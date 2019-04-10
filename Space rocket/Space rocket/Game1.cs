@@ -11,11 +11,13 @@ namespace Space_rocket
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Texture2D Srocket;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+           
         }
 
         /// <summary>
@@ -41,6 +43,7 @@ namespace Space_rocket
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            Srocket = Content.Load<Texture2D>("Srocket");
         }
 
         /// <summary>
@@ -74,6 +77,9 @@ namespace Space_rocket
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
+            spriteBatch.Draw(Srocket,new Vector2(100,100), Color.White);
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
 
