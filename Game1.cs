@@ -12,9 +12,7 @@ namespace Space_rocket
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D Srocket;
-        Vector2 position;
-        Vector2 speed;
-        float angle = 0;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -31,7 +29,6 @@ namespace Space_rocket
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            position = new Vector2(300, 200);
 
             base.Initialize();
         }
@@ -70,31 +67,6 @@ namespace Space_rocket
 
             // TODO: Add your update logic here
 
-            var state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.W))
-            {
-                speed += new Vector2(0, -0.1f);
-            }
-            else
-            {
-                speed += new Vector2(0, 0.1f);
-                if (speed.Y > 0)
-                    speed.Y = 0;
-            }
-            if (state.IsKeyDown(Keys.D))
-            {
-                angle++;
-            }
-            if (state.IsKeyDown(Keys.A))
-            {
-                angle--;
-            }
-
-
-
-
-
-            position += speed;
             base.Update(gameTime);
         }
 
@@ -106,8 +78,7 @@ namespace Space_rocket
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            //spriteBatch.Draw(Srocket,new Rectangle((int)position.X,(int)position.Y,150,150), Color.White);
-            spriteBatch.Draw(Srocket, new Rectangle((int)position.X, (int)position.Y, 150, 150),null, Color.White,MathHelper.ToRadians(angle),new Vector2(Srocket.Width,Srocket.Height)/2,SpriteEffects.None,0);
+            spriteBatch.Draw(Srocket,new Vector2(100,100), Color.White);
             spriteBatch.End();
 
             // TODO: Add your drawing code here
