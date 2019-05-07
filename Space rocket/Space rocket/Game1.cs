@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Space_rocket
 {
@@ -9,17 +10,31 @@ namespace Space_rocket
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
+        readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
         Texture2D Srocket;
+        Texture2D game1fireballs;
+
+        private List<Vector2>  fireballList;
+        private int fireballTimer = 120;
+
+
         Vector2 position;
         Vector2 speed;
-        float angle = 0;
+
+        Keys lastHorizontal = Keys.X;
+        readonly float angle = 0;
+        private readonly object Game1fiereballs;
+        private readonly Texture2D fireballsTexture;
+        //private Vector2? game1fireballs;
+        //private Vector2? game1fireballs;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-           
+
         }
 
         /// <summary>
@@ -32,6 +47,7 @@ namespace Space_rocket
         {
             // TODO: Add your initialization logic here
             position = new Vector2(300, 200);
+            fireballList = new List<Vector2>();
 
             base.Initialize();
         }
@@ -47,6 +63,7 @@ namespace Space_rocket
 
             // TODO: use this.Content to load your game content here
             Srocket = Content.Load<Texture2D>("Srocket");
+            game1fireballs = Content.Load<Texture2D>("fireballspng");
         }
 
         /// <summary>
@@ -69,7 +86,6 @@ namespace Space_rocket
                 Exit();
 
             // TODO: Add your update logic here
-
             var state = Keyboard.GetState();
             if (state.IsKeyDown(Keys.W))
             {
@@ -81,13 +97,30 @@ namespace Space_rocket
                 if (speed.Y > 0)
                     speed.Y = 0;
             }
+
             if (state.IsKeyDown(Keys.D))
             {
-                angle++;
+                speed += new Vector2(0.01f, 0);
+                lastHorizontal = Keys.D;
             }
+            else if (lastHorizontal == Keys.D)
+            {
+                speed += new Vector2(-0.01f, 0);
+                if (speed.X < 0)
+                    speed.X = 0;
+            }
+
             if (state.IsKeyDown(Keys.A))
             {
-                angle--;
+                speed += new Vector2(-0.01f, 0);
+                lastHorizontal = Keys.A;
+            }
+
+            else if (lastHorizontal == Keys.A)
+            {
+                speed += new Vector2(0.01f, 0);
+                if (speed.X > 0)
+                    speed.X = 0;
             }
 
 
@@ -95,8 +128,22 @@ namespace Space_rocket
 
 
             position += speed;
+            //fireballs!!
+            fireballTimer--;
+            if (fireballTimer <= 0) 
+            {
+                fireballTimer = 120;
+                fireballList.Add(new Vector2(200, -20));
+              
+            }
+            for (int i = 0; i < fireballList.Count; i++)
+            {
+                fireballList[i] = fireballList[i] + new Vector2(0, 2);
+            }
             base.Update(gameTime);
+
         }
+
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -107,7 +154,13 @@ namespace Space_rocket
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             //spriteBatch.Draw(Srocket,new Rectangle((int)position.X,(int)position.Y,150,150), Color.White);
-            spriteBatch.Draw(Srocket, new Rectangle((int)position.X, (int)position.Y, 150, 150),null, Color.White,MathHelper.ToRadians(angle),new Vector2(Srocket.Width,Srocket.Height)/2,SpriteEffects.None,0);
+            spriteBatch.Draw(Srocket, new Rectangle((int)position.X, (int)position.Y, 150, 150), null, Color.White, MathHelper.ToRadians(angle), new Vector2(Srocket.Width, Srocket.Height) / 2, SpriteEffects.None, 0);
+            {
+                foreach (var fireballs in fireballList) 
+                {
+                    spriteBatch.Draw(game1fireballs, fireballs, Color.White);
+                }
+            }
             spriteBatch.End();
 
             // TODO: Add your drawing code here
