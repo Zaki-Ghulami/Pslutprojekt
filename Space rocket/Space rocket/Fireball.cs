@@ -14,6 +14,11 @@ namespace Space_rocket
         Texture2D texture;
         float speed = 5;
 
+        public Rectangle Hitbox
+        {
+            get { return new Rectangle(position.ToPoint(), new Point(50, 50)); }
+        }
+
         public Fireball(Texture2D Texture, Vector2 position)
         {
             this.texture = Texture;
@@ -25,7 +30,7 @@ namespace Space_rocket
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle(position.ToPoint(), new Point(15, 15)), Color.White);
+            spriteBatch.Draw(texture, Hitbox, Color.White);
 
         }
     }

@@ -16,10 +16,11 @@ namespace Space_rocket
         Texture2D Srocket;
         Texture2D game1fireballs;
 
-        private List<Vector2> fireballList;
+        private List<Fireball> fireballList;
         private int fireballTimer = 120;
         private System.Random rnd;
 
+        Spacerocket spacerocket;
 
         Vector2 position;
         Vector2 speed;
@@ -27,7 +28,6 @@ namespace Space_rocket
         Keys lastHorizontal = Keys.X;
         Keys lastvertical = Keys.Y;
         readonly float angle = 0;
-        private readonly object Game1fiereballs;
         private readonly Texture2D fireballsTexture;
         //private Vector2? game1fireballs;
         //private Vector2? game1fireballs;
@@ -49,10 +49,11 @@ namespace Space_rocket
         {
             // TODO: Add your initialization logic here
             position = new Vector2(300, 300);
-            fireballList = new List<Vector2>();
+            fireballList = new List<Fireball>();
             rnd = new System.Random();
 
             base.Initialize();
+            spacerocket = new Spacerocket(Srocket, position);
         }
 
         /// <summary>
@@ -89,60 +90,7 @@ namespace Space_rocket
                 Exit();
 
             // TODO: Add your update logic here
-            var state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.W))
-            {
-                speed += new Vector2(0, -0.1f);
-            }
-            else
-            {
-                speed += new Vector2(0, 0.1f);
-                if (speed.Y > 0)
-                    speed.Y = 0;
-            }
-      
-
-            if (state.IsKeyDown(Keys.D))
-            {
-                speed += new Vector2(0.012f, 0);
-                lastHorizontal = Keys.D;
-            }
-            else if (lastHorizontal == Keys.D)
-            {
-                speed += new Vector2(-0.02f, 0);
-                if (speed.X < 0)
-                    speed.X = 0;
-            }
-
-            if (state.IsKeyDown(Keys.A))
-            {
-                speed += new Vector2(-0.02f, 0);
-                lastHorizontal = Keys.A;
-            }
-
-            else if (lastHorizontal == Keys.A)
-            {
-                speed += new Vector2(0.02f, 0);
-                if (speed.X > 0)
-                    speed.X = 0;
-            }
-            if (state.IsKeyDown(Keys.S))
-            {
-                speed += new Vector2(0,0.2f);
-                lastvertical = Keys.S;               
-            }
-            else if (lastvertical == Keys.S)
-            {
-                speed += new Vector2(0, -0.2f);
-                if (speed.Y > 0)
-                    speed.Y = 0;
-            }
-
-
-
-
-
-            position += speed;
+            spacerocket.Update();
             //fireballs!!
             fireballTimer--;
             if (fireballTimer <= 0)
@@ -150,18 +98,25 @@ namespace Space_rocket
                 fireballTimer = 120;
                 if (rnd.Next(2) == 0)
                 {
-                    fireballList.Add(new Vector2(200, -40));
+                    fireballList.Add(new Fireball(game1fireballs,new Vector2(rnd.Next(0,750), -40)));
                 }
                 else 
                 {
-                    fireballList.Add(new Vector2(350, -20));
+                    fireballList.Add(new Fireball(game1fireballs, new Vector2(rnd.Next(0, 750), -40)));
                 }
 
             }
             for (int i = 0; i < fireballList.Count; i++)
             {
-                fireballList[i] = fireballList[i] + new Vector2(0,1);
+                fireballList[i].Update();
             }
+
+            foreach (var item in fireballList)
+            {
+                if (item.Hitbox.Intersects(spacerocket.Hitbox))
+                    Exit();
+            }
+
             base.Update(gameTime);
 
         }
@@ -176,12 +131,11 @@ namespace Space_rocket
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             //spriteBatch.Draw(Srocket,new Rectangle((int)position.X,(int)position.Y,150,150), Color.White);
-            spriteBatch.Draw(Srocket, new Rectangle((int)position.X, (int)position.Y, 150, 150), null, Color.White, MathHelper.ToRadians(angle), new Vector2(Srocket.Width, Srocket.Height) / 2, SpriteEffects.None, 0);
+
+            spacerocket.Draw(spriteBatch);
+            foreach (var fireballs in fireballList)
             {
-                foreach (var fireballs in fireballList)
-                {
-                    spriteBatch.Draw(game1fireballs, fireballs, Color.White);
-                }
+                fireballs.Draw(spriteBatch);
             }
             spriteBatch.End();
 
