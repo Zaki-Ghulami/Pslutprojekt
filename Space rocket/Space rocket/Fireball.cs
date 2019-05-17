@@ -24,8 +24,10 @@ namespace Space_rocket
             this.texture = Texture;
             this.position = position;
         }
+       
         public void Update()
         {
+            // Fireballs ska röra sig på Y-axeln!
             position.Y += speed;
         }
         public void Draw(SpriteBatch spriteBatch)

@@ -12,7 +12,6 @@ namespace Space_rocket
     {
         readonly GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
         Texture2D Srocket;
         Texture2D game1fireballs;
 
@@ -25,7 +24,9 @@ namespace Space_rocket
         Vector2 position;
         Vector2 speed;
 
+        //Spara sista kanppen för att minska fartenn i X-led!
         Keys lastHorizontal = Keys.X;
+        //Spara sista kanppen för att minska fartenn i Y-led!
         Keys lastvertical = Keys.Y;
         readonly float angle = 0;
         private readonly Texture2D fireballsTexture;
@@ -47,7 +48,9 @@ namespace Space_rocket
         /// </summary>
         protected override void Initialize()
         {
+
             // TODO: Add your initialization logic here
+            //Positionen och fireballslista ges!
             position = new Vector2(300, 300);
             fireballList = new List<Fireball>();
             rnd = new System.Random();
